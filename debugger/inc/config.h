@@ -20,7 +20,8 @@
 
 // System Constants
 #define CALIBRATION_FACTOR 404.70 // Replace with your field-tested value [
-#define SLEEP_DURATION 10     // Logging interval for bee behavior
+#define SLEEP_DURATION 30     // Logging interval for bee behavior
 #define LONG_DURATION 28800ULL * 1000000ULL // Sleep at the Night Time
+
 
 #endif

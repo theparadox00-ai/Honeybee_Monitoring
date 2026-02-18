@@ -2,9 +2,9 @@
 
 const char* SMTP_HOST       = "smtp.gmail.com";
 const int   SMTP_PORT       = 465;
-const char* AUTHOR_EMAIL    = "suryadiya04@gmail.com";
-const char* AUTHOR_PASSWORD = "yxjo gelb vyha zmep"; 
-const char* RECIPIENT_EMAIL = "suryadiya04@gmail.com";
+const char* AUTHOR_EMAIL    = "********@gmail.com";
+const char* AUTHOR_PASSWORD = "**** **** **** ****"; 
+const char* RECIPIENT_EMAIL = "********@gmail.com";
 
 SMTPSession smtp;
 
@@ -99,3 +99,4 @@ bool Send_All_Data_Email(int Soc,int Volt) {
     Serial.println("Email Sent Successfully!");
     return true;
 }
+

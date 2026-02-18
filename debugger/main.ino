@@ -1,7 +1,7 @@
 /* This is the main program which represents the workflow of the whole program for data logging 
-   While deploying the system wakes up every 10s for getting the Audio data , every 20s for getting the load cell sensor reading (Storing it in SD card)
+   While deploying the system wakes up every 30s for getting the load cell sensor reading (Storing it in SD card)
    every 15 mins for getting the SHT45 sensor reading 
-   The data is then sent to SMTP server to the Gmail
+   The data is then sent to SMTP server to the Gmail every 3 hours
 */
 
 #include "config.h"
@@ -19,11 +19,11 @@ size_t BootCount = BootCount(DIR_BC,"/count.txt");
 RTC_DATA_ATTR long savedOffset = 0;
 
 enum B_CountNo : char{
-    LoadCell = 2 , SHT45 = 90, WI_FI = 900  
+    LoadCell = 1 , SHT45 = 30, WI_FI = 360
 };
 
-const char* WIFI_SSID = "vivo V23e 5G";
-const char* WIFI_PASS = "suryadiya";
+const char* WIFI_SSID = "********";
+const char* WIFI_PASS = "********";
 
 T_S_sensor SHT45;
 LiFuelGauge gauge(MAX17043, 0);
@@ -169,5 +169,6 @@ void setup() {
     Alarm_();
     esp_deep_sleep_start();
 }
+
 
 void loop(){}

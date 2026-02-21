@@ -1,5 +1,4 @@
-/* This file presents all the necessary logic to create
-   SD directories/files and log data for efficient transmission. */
+/* This file presents all the necessary logic to create SD directories/files and log data for efficient transmission. */
 
 #include "sd_data.h"
 
@@ -172,3 +171,4 @@ void parameter(char* time, int transmissionNo) {
 void SD_Sleep() {
     SD.end();
 }
+

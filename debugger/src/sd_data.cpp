@@ -6,6 +6,7 @@ extern const char* DIR_LOADCELL = "/LoadCell";
 extern const char* DIR_SHT      = "/SHT45";
 extern const char* DIR_BC = "/BOOTCOUNT";
 extern const char* DIR_PARAM = "/PARAM";
+extern const char* DIR_TEMP = "/Temp";
 
 bool Init_SD() {
     if (!SD.begin(SD_CS_PIN)) {
@@ -17,6 +18,7 @@ bool Init_SD() {
     if (!SD.exists(DIR_SHT)) SD.mkdir(DIR_SHT);
     if (!SD.exists(DIR_BC)) SD.mkdir(DIR_BC);
     if (!SD.exists(DIR_PARAM)) SD.mkdir(DIR_PARAM);
+    if (!SD.exists(DIR_TEMP)) SD.mkdir(DIR_TEMP);
 
     String lcPath = String(DIR_LOADCELL) + "/data.csv";
     if (!SD.exists(lcPath)) {
@@ -47,7 +49,7 @@ bool Init_SD() {
         }
     }
 
-    String parPath = String(DIR_PARAM) + "/data.csv";
+    String ParPath = String(DIR_PARAM) + "/data.csv";
     if (!SD.exists(parPath)) {
         File f = SD.open(parPath, FILE_WRITE);
         if (f) {
@@ -56,7 +58,27 @@ bool Init_SD() {
             Serial.println("Created PARAMETER file");
         }
     }
-    return true;
+
+    String lcPath_temp = String(DIR_TEMP) + "/lc_temp.csv";
+    if (!SD.exists(lcPath_temp)) {
+        File f = SD.open(lcPath_temp, FILE_WRITE);
+        if (f) {
+            f.println("Timestamp,Load_Value"); 
+            f.close();
+            Serial.println("Created LC file");
+        }
+    }
+
+    String shtPath_temp = String(DIR_TEMP) + "/sht_temp.csv";
+    if (!SD.exists(shtPath_temp)) {
+        File f = SD.open(shtPath_temp, FILE_WRITE);
+        if (f) {
+            f.println("Timestamp,Temperature,Humidity"); 
+            f.close();
+            Serial.println("Created SHT file");
+        }
+    }    
+    return true;   
 }
 
 void LoadCell_write(char* time, float load) {
@@ -104,3 +126,4 @@ void parameter(char* time){
 void SD_Sleep() {
     SD.end(); 
 }
+

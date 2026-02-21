@@ -42,17 +42,17 @@ bool Send_All_Data_Email(int Soc,int Volt) {
     SMTP_Attachment *att2 = nullptr;
 
     String lcPath_temp = String(DIR_TEMP) + "/lc_temp.csv";
-    if (SD.exists(lcPath)) {
+    if (SD.exists(lcPath_temp)) {
         att1 = new SMTP_Attachment();
         att1->descr.filename = "LoadCell_Data.csv";
         att1->descr.mime = "text/csv"; 
-        att1->file.path = lcPath.c_str();
+        att1->file.path = lcPath_temp.c_str();
         att1->file.storage_type = esp_mail_file_storage_type_sd; 
         message.addAttachment(*att1);
     }
 
     String shtPath_temp = String(DIR_TEMP) + "/sht_temp.csv";
-    if (SD.exists(shtPath)) {
+    if (SD.exists(shtPath_temp)) {
         att2 = new SMTP_Attachment();
         att2->descr.filename = "SHT45_Data.csv";
         att2->descr.mime = "text/csv";
@@ -99,5 +99,6 @@ bool Send_All_Data_Email(int Soc,int Volt) {
     Serial.println("Email Sent Successfully!");
     return true;
 }
+
 
 

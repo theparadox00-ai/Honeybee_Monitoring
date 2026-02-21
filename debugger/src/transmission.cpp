@@ -56,7 +56,7 @@ bool Send_All_Data_Email(int Soc,int Volt) {
         att2 = new SMTP_Attachment();
         att2->descr.filename = "SHT45_Data.csv";
         att2->descr.mime = "text/csv";
-        att2->file.path = shtPath.c_str();
+        att2->file.path = shtPath_temp.c_str();
         att2->file.storage_type = esp_mail_file_storage_type_sd;
         message.addAttachment(*att2);
     }
@@ -99,6 +99,7 @@ bool Send_All_Data_Email(int Soc,int Volt) {
     Serial.println("Email Sent Successfully!");
     return true;
 }
+
 
 
 

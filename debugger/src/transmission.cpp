@@ -41,7 +41,7 @@ bool Send_All_Data_Email(int Soc,int Volt) {
     SMTP_Attachment *att1 = nullptr;
     SMTP_Attachment *att2 = nullptr;
 
-    String lcPath = String(DIR_LOADCELL) + "/data.csv";
+    String lcPath_temp = String(DIR_TEMP) + "/lc_temp.csv";
     if (SD.exists(lcPath)) {
         att1 = new SMTP_Attachment();
         att1->descr.filename = "LoadCell_Data.csv";
@@ -51,7 +51,7 @@ bool Send_All_Data_Email(int Soc,int Volt) {
         message.addAttachment(*att1);
     }
 
-    String shtPath = String(DIR_SHT) + "/data.csv";
+    String shtPath_temp = String(DIR_TEMP) + "/sht_temp.csv";
     if (SD.exists(shtPath)) {
         att2 = new SMTP_Attachment();
         att2->descr.filename = "SHT45_Data.csv";
@@ -76,7 +76,7 @@ bool Send_All_Data_Email(int Soc,int Volt) {
         return false;
     }
 
-    File f1 = SD.open(lcPath, FILE_WRITE | O_TRUNC);
+    File f1 = SD.open(lcPath_temp, FILE_WRITE | O_TRUNC);
     if (f1) {
         f1.close();
         Serial.printf("Cleared: %s\n", lcPath.c_str());
@@ -84,7 +84,7 @@ bool Send_All_Data_Email(int Soc,int Volt) {
         Serial.printf("Clear LC failed: %s\n", lcPath.c_str());
     }
 
-    File f2 = SD.open(shtPath, FILE_WRITE | O_TRUNC);
+    File f2 = SD.open(shtPath_temp, FILE_WRITE | O_TRUNC);
     if (f2) {
         f2.close();
         Serial.printf("Cleared: %s\n", shtPath.c_str());
@@ -99,4 +99,5 @@ bool Send_All_Data_Email(int Soc,int Volt) {
     Serial.println("Email Sent Successfully!");
     return true;
 }
+
 

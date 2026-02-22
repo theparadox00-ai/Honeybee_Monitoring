@@ -1,7 +1,10 @@
 #include "Long_sleep.h"
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 struct SunTimes {
-  bool   flag;
+  bool   valid;      // Renamed for clarity
   String sunrise;  
   String sunset;
 };
@@ -15,10 +18,18 @@ SunTimes getSunTimes(double lat, double lon) {
   }
 
   HTTPClient http;
-  String url = "https://api.sunrisesunset.io/json?lat=" + String(lat, 6) + "&lng=" + String(lon, 6) +"&timezone=auto";
+  String url = "https://api.sunrisesunset.io/json?lat=" + String(lat, 6) + 
+               "&lng=" + String(lon, 6) + "&timezone=auto";
 
   http.begin(url);
   int httpCode = http.GET();
+
+  if (httpCode <= 0) {
+    Serial.printf("HTTP request failed: %s\n", http.errorToString(httpCode).c_str());
+    http.end();
+    return result;
+  }
+
   if (httpCode != HTTP_CODE_OK) {
     Serial.printf("HTTP error: %d\n", httpCode);
     http.end();
@@ -39,11 +50,12 @@ SunTimes getSunTimes(double lat, double lon) {
   result.sunrise = doc["results"]["sunrise"].as<String>();
   result.sunset  = doc["results"]["sunset"].as<String>();
 
-  if (result.sunrise.length() < 5 || result.sunset.length() < 5) {
+  // Validate we actually got strings
+  if (result.sunrise.length() == 0 || result.sunset.length() == 0) {
     Serial.println("Invalid sunrise/sunset strings");
-    result.ok = false;
+    result.valid = false;
   } else {
-    result.ok = true;
+    result.valid = true;
   }
 
   return result;

@@ -30,18 +30,18 @@ LiFuelGauge gauge(MAX17043, 0);
 
 class ScheduledTask {
 public:
-    virtual bool shouldExecute(size_t bootCount) = 0;
+    virtual bool shouldExecute(size_t BootCount) = 0;
     virtual void execute(char* timeStr, long savedOffset) = 0;
     virtual ~ScheduledTask() {}
 };
 
 class LoadCellTask : public ScheduledTask {
 public:
-    bool shouldExecute(size_t bootCount) override {
-        return bootCount % LoadCell == 0;
+    bool shouldExecute(size_t BootCount) override {
+        return BootCount % LoadCell == 0;
     }
     void execute(char* timeStr, long savedOffset) override {
-        float loadValue = LoadCellReading(bootCount, savedOffset);
+        float loadValue = LoadCellReading(BootCount, savedOffset);
         Serial.print("Weight: "); Serial.println(loadValue);
         LoadCell_write(timeStr, loadValue);  
     }
@@ -49,8 +49,8 @@ public:
 
 class SHT45Task : public ScheduledTask {
 public:
-    bool shouldExecute(size_t bootCount) override {
-        return bootCount % SHT45 == 0 && bootCount != 0;  
+    bool shouldExecute(size_t BootCount) override {
+        return BootCount % SHT45 == 0 && BootCount != 0;  
     }
     void execute(char* timeStr, long savedOffset) override {
         SHT45.init();
@@ -66,8 +66,8 @@ public:
 
 class WiFiEmailTask : public ScheduledTask {
 public:
-    bool shouldExecute(size_t bootCount) override {
-        return bootCount % WI_FI == 0 && bootCount != 0;  
+    bool shouldExecute(size_t BootCount) override {
+        return BootCount % WI_FI == 0 && bootCount != 0;  
     }
     void execute(char* timeStr, long savedOffset) override {
         double SoC = gauge.getSOC();

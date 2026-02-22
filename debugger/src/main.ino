@@ -15,11 +15,13 @@
 #include <vector>
 #include <WiFi.h>
 
-size_t BootCount = BootCount(DIR_BC,"/count.txt");
+size_t BootCount = BootCount(DIR_BC, "/count.txt");
 RTC_DATA_ATTR long savedOffset = 0;
 
-enum B_CountNo : char{
-    LoadCell = 1 , SHT45 = 30, WI_FI = 360
+enum B_CountNo : char {
+    LoadCell = 1, 
+    SHT45 = 30, 
+    WI_FI = 360
 };
 
 const char* WIFI_SSID = "********";
@@ -57,7 +59,7 @@ public:
         float tempValue = -999.0, humiValue = -999.0;
         SHT45.readTempHum(tempValue, humiValue);
         Serial.print(tempValue); Serial.print(","); Serial.println(humiValue);
-        if(tempValue != -999.0 && humiValue != -999.0) {
+        if (tempValue != -999.0 && humiValue != -999.0) {
             SHT_write(timeStr, tempValue, humiValue);
             Serial.println("SHT Data Logged");
         }
@@ -67,7 +69,7 @@ public:
 class WiFiEmailTask : public ScheduledTask {
 public:
     bool shouldExecute(size_t BootCount) override {
-        return BootCount % WI_FI == 0 && bootCount != 0;  
+        return BootCount % WI_FI == 0 && BootCount != 0;  
     }
     void execute(char* timeStr, long savedOffset) override {
         double SoC = gauge.getSOC();
@@ -79,14 +81,14 @@ public:
         WiFi.begin(WIFI_SSID, WIFI_PASS);
         
         unsigned long startAttempt = millis();
-        while(WiFi.status() != WL_CONNECTED && millis() - startAttempt < 25000) {
+        while (WiFi.status() != WL_CONNECTED && millis() - startAttempt < 25000) {
             Serial.print(".");
         }
         
-        if(WiFi.status() == WL_CONNECTED) {
+        if (WiFi.status() == WL_CONNECTED) {
             clock_Synchronization();
             Serial.print("SoC: "); Serial.print(SoC); Serial.print("%, Voltage: "); Serial.println(Voltage);
-            if(Send_All_Data_Email((int)SoC,(int)Voltage)) {
+            if (Send_All_Data_Email((int)SoC, (int)Voltage)) {
                 Serial.println("Email Sent Successfully.");
                 parameter(timeStr);
             } else {
@@ -109,20 +111,20 @@ void setup() {
     char timeStr[25];
     Time_(timeStr);  
 
-    if(isNightTime(timeStr)) {
+    if (isNightTime(timeStr)) {
         handleNightSleep(timeStr);
         return;
     }
 
     if (!Init_SD()) Serial.println("SD Init Failed!");
 
-    if(BootCount == (size_t)-1){
+    if (BootCount == (size_t)-1) {
         Serial.print("Invalid Count Loop Repeats again");
         esp_deep_sleep_start();
         return;
     }
 
-    if(BootCount == 0) {
+    if (BootCount == 0) {
         Serial.println("Reset Tare !!!! ");
         WiFi.begin(WIFI_SSID, WIFI_PASS);
         clock_Synchronization();
@@ -154,15 +156,15 @@ void setup() {
         &wifiEmailTask
     };
 
-    for(auto task : tasks) {
-        if(task->shouldExecute(BootCount)) {
+    for (auto task : tasks) {
+        if (task->shouldExecute(BootCount)) {
             task->execute(timeStr, savedOffset);
         }
     }
 
     SD_Sleep(); 
     BootCount++; 
-    writeLastSent(DIR_BC,"/count.txt",BootCount);
+    writeLastSent(DIR_BC, "/count.txt", BootCount);
 
     Serial.println("Entering deep sleep...");
     Serial.flush();
@@ -170,5 +172,4 @@ void setup() {
     esp_deep_sleep_start();
 }
 
-
-void loop(){}
+void loop() {}

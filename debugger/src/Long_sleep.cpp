@@ -4,7 +4,7 @@
 #include <ArduinoJson.h>
 
 struct SunTimes {
-  bool   valid;      // Renamed for clarity
+  bool   valid;
   String sunrise;  
   String sunset;
 };

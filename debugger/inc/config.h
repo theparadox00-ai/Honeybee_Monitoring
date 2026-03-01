@@ -17,6 +17,7 @@
 #define HX711_DOUT_PIN 4    // Example GPIO for HX711 
 #define HX711_SCK_PIN  5    // Example GPIO for HX711
 #define CLOCK_INTERRUPT_PIN 33 // Clock Sleep Interrupt
+#define MOSFET_PIN 21 // Mosfet Key
 
 // System Constants
 #define CALIBRATION_FACTOR 404.70 // Replace with your field-tested value [
@@ -25,3 +26,4 @@
 
 
 #endif
+

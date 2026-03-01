@@ -10,10 +10,8 @@
 #include "rtc_config.h" 
 #include "sd_data.h"
 #include "file.h"
-#include "transmission.h"
-#include <LiFuelGauge.h>  
+#include "transmission.h" 
 #include <vector>
-#include <WiFi.h>
 
 size_t BootCount = BootCount(DIR_BC, "/count.txt");
 RTC_DATA_ATTR long savedOffset = 0;

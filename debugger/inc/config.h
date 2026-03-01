@@ -15,10 +15,10 @@
 #include <LiFuelGauge.h> 
 
 // ESP32 Pins Configuration
-#define SD_CS_PIN 13    // Standard CS 
-#define HX711_DOUT_PIN 4    // Example GPIO for HX711 
-#define HX711_SCK_PIN  5    // Example GPIO for HX711
-#define CLOCK_INTERRUPT_PIN 33 // Clock Sleep Interrupt
+#define SD_CS_PIN 13    // Standard CS IO D11
+#define HX711_DOUT_PIN 3    // Example GPIO for HX711 D2
+#define HX711_SCK_PIN  38    // Example GPIO for HX711 D3
+#define CLOCK_INTERRUPT_PIN 14 // Clock Sleep Interrupt D13 
 #define MOSFET_PIN 21 // Mosfet Key
 
 // System Constants
@@ -28,5 +28,6 @@
 
 
 #endif
+
 
 

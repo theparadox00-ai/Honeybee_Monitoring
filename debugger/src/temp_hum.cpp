@@ -1,16 +1,39 @@
 #include "temp_hum.h"
 
+#ifdef NO_ERROR
+#undef NO_ERROR
+#endif
+#define NO_ERROR 0
+
+SensirionI2cSht4x sht4;
+
+static char errorMessage[64];
+static int16_t error;
+
 void T_S_sensor::init() {
-    if (!sht4.begin()) {
-        Serial.println("SHT45 Not Found");
+    Wire.begin();
+    sht4.begin(Wire, SHT45_I2C_ADDR_44);
+    sht4.softReset();
+    delay(10);
+    
+    uint32_t serialNumber = 0;
+    error = sht4.serialNumber(serialNumber);
+    if (error != NO_ERROR) {
+        Serial.print("SHT45 serialNumber error: ");
+        errorToString(error, errorMessage, sizeof(errorMessage));
+        Serial.println(errorMessage);
     }
-    sht4.setPrecision(SHT4X_HIGH_PRECISION);
-    sht4.setHeater(SHT4X_NO_HEATER);
 }
 
 void T_S_sensor::readTempHum(float &temp, float &hum) {
-    sensors_event_t humidity, temp_event;
-    sht4.getEvent(&humidity, &temp_event);
-    temp = temp_event.temperature;
-    hum = humidity.relative_humidity;
+    delay(20);  
+    error = sht4.measureHighPrecision(temp, hum);
+    if (error != NO_ERROR) {
+        Serial.print("SHT45 measure error: ");
+        errorToString(error, errorMessage, sizeof(errorMessage));
+        Serial.println(errorMessage);
+        temp = 0.0f;
+        hum = 0.0f;
+        return;
+    }
 }

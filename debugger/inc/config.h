@@ -6,11 +6,11 @@
 #include <SPI.h>
 #include "FS.h"
 #include "SD.h"
-#include <Wifi.h>
 
 #include <HX711_ADC.h>    // Weight sensing for bee hive 
 #include <RTClib.h>       // DS3231 Timekeeping 
-#include "Adafruit_SHT4x.h" // Precision Temp/Humidity 
+#include <Wifi.h>
+#include <SensirionI2cSht4x.h> // Precision Temp/Humidity 
 #include <ESP_Mail_Client.h> // Email alerts for swarming 
 #include <LiFuelGauge.h> 
 
@@ -28,6 +28,7 @@
 
 
 #endif
+
 
 
 

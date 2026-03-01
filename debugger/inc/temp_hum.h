@@ -8,7 +8,7 @@ public:
     void init();
     void readTempHum(float &temp, float &hum);
 private:
-    Adafruit_SHT4x sht4;
+    SensirionI2cSht4x sht4;
 };
 
 #endif

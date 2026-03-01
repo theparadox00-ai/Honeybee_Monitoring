@@ -18,7 +18,7 @@ RTC_DATA_ATTR long savedOffset = 0;
 
 enum B_CountNo : char {
     LoadCell = 1, 
-    SHT45 = 30, 
+    SHT45_Int = 30, 
     WI_FI = 360
 };
 
@@ -26,7 +26,9 @@ const char* WIFI_SSID = "********";
 const char* WIFI_PASS = "********";
 
 T_S_sensor SHT45;
-LiFuelGauge gauge(MAX17043, 0);
+
+// SparkFun MAX1704x object, default is MAX17043
+SFE_MAX1704X lipo; // same behavior as your working example
 
 class ScheduledTask {
 public:
@@ -50,7 +52,7 @@ public:
 class SHT45Task : public ScheduledTask {
 public:
     bool shouldExecute(size_t BootCount) override {
-        return BootCount % SHT45 == 0 && BootCount != 0;  
+        return BootCount % SHT45_Int == 0 && BootCount != 0;  
     }
     void execute(char* timeStr, long savedOffset) override {
         SHT45.init();
@@ -70,8 +72,9 @@ public:
         return BootCount % WI_FI == 0 && BootCount != 0;  
     }
     void execute(char* timeStr, long savedOffset) override {
-        double SoC = gauge.getSOC();
-        double Voltage = gauge.getVoltage();
+        // Read SoC and Voltage from SparkFun MAX1704x
+        double SoC = lipo.getSOC();
+        double Voltage = lipo.getVoltage();
         
         WiFi.persistent(false);
         WiFi.mode(WIFI_STA);
@@ -122,6 +125,15 @@ void setup() {
         return;
     }
 
+    // Initialize I2C and MAX17043 (SparkFun library)
+    Wire.begin();
+    lipo.enableDebugging(); // Optional: comment out to disable verbose debug
+
+    if (lipo.begin() == false) { // Connect to MAX17043 using default Wire port
+        Serial.println(F("MAX17043 not detected. Please check wiring. Freezing."));
+        while (1);
+    }
+
     if (BootCount == 0) {
         Serial.println("Reset Tare !!!! ");
         WiFi.begin(WIFI_SSID, WIFI_PASS);
@@ -129,13 +141,16 @@ void setup() {
         WiFi.disconnect(true);
         WiFi.mode(WIFI_OFF);
         Serial.println(timeStr);
-        gauge.reset();
+
+        // Equivalent to your previous gauge.reset() at first boot
+        lipo.quickStart();          // restart the fuel gauge for accurate SOC
         delay(200);
-        gauge.setAlertThreshold(10);
+        lipo.setThreshold(10);      // alert threshold 10% (similar to setAlertThreshold(10))
     }
 
-    double SoC = gauge.getSOC();
-    double Voltage = gauge.getVoltage();
+    // Read SoC and voltage for debug at every wake
+    double SoC = lipo.getSOC();
+    double Voltage = lipo.getVoltage();
 
     Serial.print("Boot Count: "); 
     Serial.println(BootCount);

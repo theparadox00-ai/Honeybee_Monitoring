@@ -27,7 +27,6 @@ const char* WIFI_PASS = "********";
 
 T_S_sensor SHT45;
 
-// SparkFun MAX1704x object, default is MAX17043
 SFE_MAX1704X lipo; // same behavior as your working example
 
 class ScheduledTask {
@@ -142,13 +141,10 @@ void setup() {
         WiFi.mode(WIFI_OFF);
         Serial.println(timeStr);
 
-        // Equivalent to your previous gauge.reset() at first boot
-        lipo.quickStart();          // restart the fuel gauge for accurate SOC
+        lipo.quickStart();         
         delay(200);
-        lipo.setThreshold(10);      // alert threshold 10% (similar to setAlertThreshold(10))
+        lipo.setThreshold(10);      
     }
-
-    // Read SoC and voltage for debug at every wake
     double SoC = lipo.getSOC();
     double Voltage = lipo.getVoltage();
 

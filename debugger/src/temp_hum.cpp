@@ -5,8 +5,6 @@
 #endif
 #define NO_ERROR 0
 
-SensirionI2cSht4x sht4;
-
 static char errorMessage[64];
 static int16_t error;
 
@@ -37,3 +35,4 @@ void T_S_sensor::readTempHum(float &temp, float &hum) {
         return;
     }
 }
+

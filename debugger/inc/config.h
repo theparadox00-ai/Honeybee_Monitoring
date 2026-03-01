@@ -12,7 +12,7 @@
 #include <Wifi.h>
 #include <SensirionI2cSht4x.h> // Precision Temp/Humidity 
 #include <ESP_Mail_Client.h> // Email alerts for swarming 
-#include <LiFuelGauge.h> 
+#include <SparkFun_MAX1704x_Fuel_Gauge_Arduino_Library.h> 
 
 // ESP32 Pins Configuration
 #define SD_CS_PIN 13    // Standard CS IO D11
@@ -28,6 +28,7 @@
 
 
 #endif
+
 
 
 

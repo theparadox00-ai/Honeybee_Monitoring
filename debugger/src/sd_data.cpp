@@ -1,5 +1,3 @@
-/* This file presents all the necessary logic to create SD directories/files and log data for efficient transmission. */
-
 #include "sd_data.h"
 
 const char* DIR_LOADCELL = "/LoadCell";
@@ -7,6 +5,13 @@ const char* DIR_SHT      = "/SHT45";
 const char* DIR_BC       = "/BOOTCOUNT";
 const char* DIR_PARAM    = "/PARAM";
 const char* DIR_TEMP     = "/Temp";
+
+const char* LC_PATH      = "/LoadCell/data.csv";
+const char* SHT_PATH     = "/SHT45/data.csv";
+const char* BC_PATH      = "/BOOTCOUNT/count.txt";
+const char* PARAM_PATH   = "/PARAM/data.csv";
+const char* LC_TEMP_PATH = "/Temp/lc_temp.csv";
+const char* SHT_TEMP_PATH= "/Temp/sht_temp.csv";
 
 bool Init_SD() {
     if (!SD.begin(SD_CS_PIN)) {
@@ -20,9 +25,8 @@ bool Init_SD() {
     if (!SD.exists(DIR_PARAM))    SD.mkdir(DIR_PARAM);
     if (!SD.exists(DIR_TEMP))     SD.mkdir(DIR_TEMP);
 
-    String lcPath = String(DIR_LOADCELL) + "/data.csv";
-    if (!SD.exists(lcPath)) {
-        File f = SD.open(lcPath, FILE_WRITE);
+    if (!SD.exists(LC_PATH)) {
+        File f = SD.open(LC_PATH, FILE_WRITE);
         if (f) {
             f.println("Timestamp,Load_Value");
             f.close();
@@ -32,9 +36,8 @@ bool Init_SD() {
         }
     }
 
-    String shtPath = String(DIR_SHT) + "/data.csv";
-    if (!SD.exists(shtPath)) {
-        File f = SD.open(shtPath, FILE_WRITE);
+    if (!SD.exists(SHT_PATH)) {
+        File f = SD.open(SHT_PATH, FILE_WRITE);
         if (f) {
             f.println("Timestamp,Temperature,Humidity");
             f.close();
@@ -44,9 +47,8 @@ bool Init_SD() {
         }
     }
 
-    String BCPath = String(DIR_BC) + "/count.txt";
-    if (!SD.exists(BCPath)) {
-        File f = SD.open(BCPath, FILE_WRITE);
+    if (!SD.exists(BC_PATH)) {
+        File f = SD.open(BC_PATH, FILE_WRITE);
         if (f) {
             f.close();
             Serial.println("Created BOOTCOUNT file");
@@ -54,10 +56,9 @@ bool Init_SD() {
             Serial.println("Failed to create BOOTCOUNT file");
         }
     }
-
-    String parPath = String(DIR_PARAM) + "/data.csv";
-    if (!SD.exists(parPath)) {
-        File f = SD.open(parPath, FILE_WRITE);
+    
+    if (!SD.exists(PARAM_PATH)) {
+        File f = SD.open(PARAM_PATH, FILE_WRITE);
         if (f) {
             f.println("Timestamp,Transmission_No");
             f.close();
@@ -67,9 +68,8 @@ bool Init_SD() {
         }
     }
 
-    String lcPath_temp = String(DIR_TEMP) + "/lc_temp.csv";
-    if (!SD.exists(lcPath_temp)) {
-        File f = SD.open(lcPath_temp, FILE_WRITE);
+    if (!SD.exists(LC_TEMP_PATH)) {
+        File f = SD.open(LC_TEMP_PATH, FILE_WRITE);
         if (f) {
             f.println("Timestamp,Load_Value");
             f.close();
@@ -79,9 +79,8 @@ bool Init_SD() {
         }
     }
 
-    String shtPath_temp = String(DIR_TEMP) + "/sht_temp.csv";
-    if (!SD.exists(shtPath_temp)) {
-        File f = SD.open(shtPath_temp, FILE_WRITE);
+    if (!SD.exists(SHT_TEMP_PATH)) {
+        File f = SD.open(SHT_TEMP_PATH, FILE_WRITE);
         if (f) {
             f.println("Timestamp,Temperature,Humidity");
             f.close();
@@ -95,8 +94,7 @@ bool Init_SD() {
 }
 
 void LoadCell_write(char* time, float load) {
-    String path = String(DIR_LOADCELL) + "/data.csv";
-    File dataFile = SD.open(path.c_str(), FILE_WRITE); 
+    File dataFile = SD.open(LC_PATH, FILE_WRITE); 
     if (dataFile) {
         dataFile.print(time);
         dataFile.print(",");
@@ -109,8 +107,7 @@ void LoadCell_write(char* time, float load) {
 }
 
 void SHT_write(char* time, float temp, float humi) {
-    String path = String(DIR_SHT) + "/data.csv";
-    File dataFile = SD.open(path.c_str(), FILE_WRITE);
+    File dataFile = SD.open(SHT_PATH, FILE_WRITE);
     if (dataFile) {
         dataFile.print(time);
         dataFile.print(",");
@@ -125,8 +122,7 @@ void SHT_write(char* time, float temp, float humi) {
 }
 
 void LoadCell_write_Temp(char* time, float load) {
-    String lcPath_temp = String(DIR_TEMP) + "/lc_temp.csv";
-    File dataFile = SD.open(lcPath_temp.c_str(), FILE_WRITE);
+    File dataFile = SD.open(LC_TEMP_PATH, FILE_WRITE);
     if (dataFile) {
         dataFile.print(time);
         dataFile.print(",");
@@ -139,8 +135,7 @@ void LoadCell_write_Temp(char* time, float load) {
 }
 
 void SHT_write_Temp(char* time, float temp, float humi) {
-    String shtPath_temp = String(DIR_TEMP) + "/sht_temp.csv";
-    File dataFile = SD.open(shtPath_temp.c_str(), FILE_WRITE);
+    File dataFile = SD.open(SHT_TEMP_PATH, FILE_WRITE);
     if (dataFile) {
         dataFile.print(time);
         dataFile.print(",");
@@ -155,8 +150,7 @@ void SHT_write_Temp(char* time, float temp, float humi) {
 }
 
 void parameter(char* time, int transmissionNo) {
-    String path = String(DIR_PARAM) + "/data.csv";
-    File dataFile = SD.open(path.c_str(), FILE_WRITE);
+    File dataFile = SD.open(PARAM_PATH, FILE_WRITE);
     if (dataFile) {
         dataFile.print(time);
         dataFile.print(",");
@@ -171,4 +165,3 @@ void parameter(char* time, int transmissionNo) {
 void SD_Sleep() {
     SD.end();
 }
-
